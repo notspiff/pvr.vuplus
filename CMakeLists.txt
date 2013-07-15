@@ -37,7 +37,7 @@ ELSE(WIN32)
 ENDIF(WIN32)
 
 SET(SOURCES src/client.cpp
-            src/PVRDemoData.cpp)
+            src/VuData.cpp)
 
 ADD_LIBRARY(pvr.vuplus ${SOURCES})
 IF(NOT WIN32)
