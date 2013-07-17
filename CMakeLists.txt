@@ -2,66 +2,25 @@ PROJECT(pvr.vuplus)
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
-include(AddonVersion.cmake)
-addon_version(pvr.vuplus VUPLUS)
-
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR})
 
 ENABLE_LANGUAGE(CXX)
 
-OPTION(PACKAGE_ZIP "Package Zip file?" OFF)
-
+FIND_PACKAGE(xbmc REQUIRED)
+FIND_PACKAGE(xbmcplatform REQUIRED)
 FIND_PACKAGE(TinyXML REQUIRED)
 
-IF(WIN32)
-  SET(BINDING_FILE ${XBMC_BINDINGS}.zip)
-  message (STATUS "downloading XBMC bindings: " ${BINDING_FILE})
-  file(DOWNLOAD http://mirrors.xbmc.org/build-deps/win32/${BINDING_FILE} ${CMAKE_BINARY_DIR}/downloads/${BINDING_FILE} STATUS STATUSLIST SHOW_PROGRESS)
-  LIST(GET STATUSLIST 0 VALUE)
-  IF(${VALUE} STRGREATER "0")
-    LIST(GET STATUSLIST 1 VALUE)
-    message (STATUS "failed to download XBMC bindings: " ${VALUE})
-  ENDIF(${VALUE} STRGREATER "0")
-  execute_process(
-   COMMAND ${CMAKE_COMMAND} -E tar xzf ${CMAKE_BINARY_DIR}/downloads/${BINDING_FILE}
-  )
-  FIND_PATH(XBMC_INCLUDE_DIR xbmc/xbmc_pvr_dll.h ${CMAKE_BINARY_DIR}/include)
-  INCLUDE_DIRECTORIES(${XBMC_INCLUDE_DIR})
-  ADD_DEFINITIONS(-DTARGET_WINDOWS)
-ELSE(WIN32)
-  FIND_PATH(XBMC_INCLUDE_DIR xbmc/xbmc_pvr_dll.h)
-  FIND_PACKAGE(xbmcplatform REQUIRED)
-  INCLUDE_DIRECTORIES(${xbmcplatform_INCLUDE_DIRS}
-                      ${TINYXML_INCLUDE_DIR}
-                      ${XBMC_INCLUDE_DIR})
-ENDIF(WIN32)
+addon_version(pvr.vuplus VUPLUS)
+
+INCLUDE_DIRECTORIES(${xbmcplatform_INCLUDE_DIRS}
+                    ${TINYXML_INCLUDE_DIR}
+                    ${XBMC_INCLUDE_DIR})
 
 SET(SOURCES src/client.cpp
             src/VuData.cpp)
 
-ADD_LIBRARY(pvr.vuplus ${SOURCES})
-IF(NOT WIN32)
-  TARGET_LINK_LIBRARIES(pvr.vuplus ${xbmcplatform_LIBRARIES} ${TINYXML_LIBRARIES})
-  set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "-s")
-  set(CMAKE_MODULE_LINKER_FLAGS_RELEASE "-s")
-ENDIF(NOT WIN32)
-SET_TARGET_PROPERTIES(pvr.vuplus PROPERTIES VERSION ${VUPLUS_VERSION}
-                                            SOVERSION 13.0
-                                            PREFIX "")
+SET(DEPLIBS ${xbmcplatform_LIBRARIES}
+            ${TINYXML_LIBRARIES})
 
-IF(PACKAGE_ZIP)
-  # Pack files together to create an archive
-  INSTALL(DIRECTORY ${PROJECT_NAME} DESTINATION ./)
-  IF(WIN32)
-    INSTALL(PROGRAMS ${CMAKE_BINARY_DIR}/pvr.vuplus.dll DESTINATION pvr.vuplus)
-  ELSE(WIN32)
-    INSTALL(TARGETS pvr.vuplus DESTINATION pvr.vuplus)
-  ENDIF(WIN32)
-  SET(CPACK_GENERATOR "ZIP")
-  SET(CPACK_INCLUDE_TOPLEVEL_DIRECTORY OFF)
-  SET(CPACK_PACKAGE_FILE_NAME ${CMAKE_PROJECT_NAME}-${VUPLUS_VERSION})
-  INCLUDE(CPack)
-ELSE(PACKAGE_ZIP)
-  INSTALL(TARGETS pvr.vuplus DESTINATION lib/xbmc/addons/pvr.vuplus)
-  INSTALL(DIRECTORY pvr.vuplus DESTINATION share/xbmc/addons)
-ENDIF(PACKAGE_ZIP)
+build_addon(pvr.vuplus SOURCES DEPLIBS VUPLUS_VERSION)
+install_addon(pvr.vuplus ${VUPLUS_VERSION})
