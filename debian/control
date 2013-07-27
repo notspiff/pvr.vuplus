@@ -5,7 +5,6 @@ Build-Depends: debhelper (>= 8.0.0), cmake, libtinyxml-dev, xbmc-pvr-dev,
                libxbmcplatform-dev, xbmc-addon-dev
 Standards-Version: 3.9.2
 Section: libs
-Homepage: <insert the upstream URL, if relevant>
 
 Package: xbmc-pvr-vuplus
 Section: libs
@@ -13,3 +12,10 @@ Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Vu+ PVR for XBMC
  Vu+ PVR for XBMC
+
+Package: xbmc-pvr-vuplus-dbg
+Section: debug
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: debug symbols for Vu+ PVR for XBMC
+ debug symbols for Vu+ PVR for XBMC
