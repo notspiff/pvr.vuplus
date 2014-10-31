@@ -1,8 +1,8 @@
 #pragma once 
 
-#include "xbmc/util/StdString.h"
+#include "kodi/util/StdString.h"
 #include "client.h"
-#include "xbmc/threads/threads.h"
+#include "kodi/threads/threads.h"
 #include "tinyxml.h"
     
 #define CHANNELDATAVERSION  2

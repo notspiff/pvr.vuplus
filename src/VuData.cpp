@@ -3,7 +3,7 @@
 #include <iostream> 
 #include <fstream> 
 #include <string>
-#include "xbmc/util/XMLUtils.h"
+#include "kodi/util/XMLUtils.h"
 
 
 using namespace ADDON;

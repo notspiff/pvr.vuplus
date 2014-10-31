@@ -6,18 +6,18 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR})
 
 enable_language(CXX)
 
-find_package(xbmc REQUIRED)
-find_package(xbmcplatform REQUIRED)
+find_package(kodi REQUIRED)
+find_package(kodiplatform REQUIRED)
 find_package(TinyXML REQUIRED)
 
-include_directories(${xbmcplatform_INCLUDE_DIRS}
+include_directories(${KODIPLATFORM_INCLUDE_DIRS}
                     ${TINYXML_INCLUDE_DIR}
-                    ${XBMC_INCLUDE_DIR})
+                    ${KODI_INCLUDE_DIR})
 
 set(VUPLUS_SOURCES src/client.cpp
                    src/VuData.cpp)
 
-set(DEPLIBS ${xbmcplatform_LIBRARIES}
+set(DEPLIBS ${KODIPLATFORM_LIBRARIES}
             ${TINYXML_LIBRARIES})
 
 build_addon(pvr.vuplus VUPLUS DEPLIBS)
